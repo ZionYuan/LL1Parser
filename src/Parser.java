@@ -515,11 +515,13 @@ public class Parser {
                 analyzeStatck.pop();
                 index++;
             } else if (VtSet.contains(X)) {
-                System.out.println("ERROR!!!!!!!!!!");
+                action = ("error near '" + Token.get(index) + "' in " + index);
+                OutPut();
                 return;
             }
             else if (M(X, a).equals("")) {
-                System.out.println("ERROR!!!!!!!!!!");
+                action = ("error near '" + Token.get(index) + "' in " + index);
+                OutPut();
                 return;
             }
             else if (GetProductionByString(M(X,a)).getRight()[0].equals("@")) {
@@ -534,26 +536,34 @@ public class Parser {
                     for (int i = len - 1; i >= 0; i--)
                         analyzeStatck.push(GetProductionByString(str).getRight()[i]);
                 } else {
-                    System.out.println("error at '" + Token.get(index) + " in " + index);
+                    action = ("error near '" + Token.get(index) + "' in " + index);
+                    OutPut();
                     return;
                 }
             }
             X = analyzeStatck.peek();
-            String stackString="";
-            for(String s : analyzeStatck){
+            OutPut();
 
-                stackString=stackString+s+"  ";
-
-            }
-
-            if(action.split(" ")[0].equals("match")){
-                formatter.format("%-9s %-16s %-5s %-40s %-50s\n",action.split(" ")[1],"","","",stackString);
-            }else{
-                Production p =GetProductionByString(action);
-                formatter.format("%-9s %-16s %-5s %-40s %-50s\n","",p.getLeft()," -> ",p.RightToString(),stackString);
-            }
         }
         formatter.format("%20s\n","$");
         formatter.format("%20s\n","分析成功!");
+    }
+    public void OutPut(){
+
+        String stackString="";
+        for(String s : analyzeStatck){
+
+            stackString=stackString+s+"  ";
+
+        }
+        if(action.split(" ")[0].equals("error")){
+            formatter.format("%-9s %-16s %-5s %-40s %-50s\n",action,"","","","");
+        }
+        else if(action.split(" ")[0].equals("match")){
+            formatter.format("%-9s %-16s %-5s %-40s %-50s\n",action.split(" ")[1],"","","",stackString);
+        }else{
+            Production p =GetProductionByString(action);
+            formatter.format("%-9s %-16s %-5s %-40s %-50s\n","",p.getLeft()," -> ",p.RightToString(),stackString);
+        }
     }
 }
